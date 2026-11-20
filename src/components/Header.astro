@@ -1,12 +1,22 @@
 ---
-import { SITE_TITLE } from "../consts";
 import HeaderLink from "./HeaderLink.astro";
 ---
 
 <header>
   <nav>
     <h2>
-      <a href="/">{SITE_TITLE}</a>
+      <a href="/" class="brand-logo" aria-label="PanduanWarga - Beranda">
+        <img
+          src="/favicon.svg?v=2"
+          alt=""
+          width="32"
+          height="32"
+          class="brand-icon"
+        />
+        <span class="brand-text">
+          Panduan<span class="brand-accent">Warga</span>
+        </span>
+      </a>
     </h2>
     <div class="internal-links">
       <HeaderLink href="/">Beranda</HeaderLink>
@@ -24,35 +34,44 @@ import HeaderLink from "./HeaderLink.astro";
   }
   h2 {
     margin: 0;
-    font-size: 1em;
+    font-size: 1.15em;
   }
-
-  h2 a,
-  h2 a.active {
+  .brand-logo,
+  .brand-logo.active {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65em 0.25em;
     text-decoration: none;
+    border-bottom: none;
+  }
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    flex-shrink: 0;
+  }
+  .brand-text {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+  }
+  .brand-accent {
+    color: #1d4ed8;
   }
   nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  nav a {
+  .internal-links a {
     padding: 1em 0.5em;
     color: var(--black);
     border-bottom: 4px solid transparent;
     text-decoration: none;
   }
-  nav a.active {
+  .internal-links a.active {
     text-decoration: none;
     border-bottom-color: var(--accent);
-  }
-  .social-links,
-  .social-links a {
-    display: flex;
-  }
-  @media (max-width: 720px) {
-    .social-links {
-      display: none;
-    }
   }
 </style>

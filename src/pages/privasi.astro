@@ -1,0 +1,68 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { CONTACT_EMAIL } from "../consts";
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead
+      title="Kebijakan Privasi - PanduanWarga"
+      description="Kebijakan privasi dan penggunaan cookie iklan di situs PanduanWarga."
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <h1>Kebijakan Privasi</h1>
+      <p>
+        Privasi pengunjung merupakan hal yang sangat penting bagi PanduanWarga.
+        Dokumen kebijakan privasi ini menjelaskan jenis informasi yang
+        dikumpulkan dan dicatat oleh situs kami serta bagaimana informasi
+        tersebut digunakan.
+      </p>
+      <h2>File Log dan Cookie</h2>
+      <p>
+        Seperti situs web pada umumnya, PanduanWarga menggunakan file log
+        standar (seperti alamat IP, jenis peramban, penyedia layanan internet,
+        dan waktu akses) untuk menganalisis tren dan mengelola situs.
+      </p>
+      <h2>Google AdSense dan Cookie DoubleClick DART</h2>
+      <p>
+        Google sebagai vendor pihak ketiga menggunakan cookie untuk menayangkan
+        iklan di situs ini. Penggunaan cookie iklan oleh Google dan mitranya
+        memungkinkan penayangan iklan kepada pengunjung berdasarkan kunjungan
+        mereka ke situs ini maupun situs lainnya di internet.
+      </p>
+      <p>
+        Pengunjung dapat menonaktifkan iklan yang dipersonalisasi melalui{" "}
+        <a
+          href="https://adssettings.google.com"
+          target="_blank"
+          rel="noopener noreferrer">Setelan Iklan Google</a
+        >, atau mempelajari lebih lanjut di halaman{" "}
+        <a
+          href="https://policies.google.com/technologies/ads"
+          target="_blank"
+          rel="noopener noreferrer">Cara Google Menggunakan Cookie dalam Iklan</a
+        >. Pengguna juga dapat menolak cookie pihak ketiga melalui{" "}
+        <a
+          href="https://www.aboutads.info/choices/"
+          target="_blank"
+          rel="noopener noreferrer">aboutads.info</a
+        >.
+      </p>
+      <h2>Data Pribadi</h2>
+      <p>
+        PanduanWarga tidak memiliki formulir pendaftaran dan tidak meminta data
+        pribadi sensitif (seperti NIK, nomor KK, atau kata sandi). Pengelolaan
+        data mengacu pada Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan
+        Data Pribadi. Pertanyaan terkait privasi dapat dikirim ke{" "}
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
+    </main>
+    <Footer />
+  </body>
+</html>

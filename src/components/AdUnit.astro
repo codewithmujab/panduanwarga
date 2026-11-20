@@ -1,0 +1,60 @@
+---
+import { ADSENSE_CLIENT } from "../consts";
+
+interface Props {
+  slotId?: string;
+  format?: "auto" | "fluid" | "rectangle" | "horizontal" | "vertical";
+  layout?: "in-article" | "";
+  minHeight?: string;
+}
+
+const {
+  slotId = "",
+  format = "auto",
+  layout = "",
+  minHeight = "100px",
+} = Astro.props;
+
+// Slot AdSense valid selalu berupa angka. Placeholder / kosong = jangan render.
+const isValidSlot = /^\d+$/.test(slotId);
+const isVertical = format === "vertical";
+---
+
+{
+  isValidSlot && (
+    <aside
+      class="ad-wrapper"
+      aria-label="Iklan"
+      style={`margin: ${isVertical ? "0 auto" : "1.75rem auto"}; min-height: ${minHeight}; text-align: center; overflow: hidden; clear: both;`}
+    >
+      <span style="display: block; font-size: 11px; color: #888; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase;">
+        Iklan
+      </span>
+
+      <ins
+        class="adsbygoogle"
+        style="display: block; text-align: center;"
+        data-ad-client={ADSENSE_CLIENT}
+        data-ad-slot={slotId}
+        data-ad-format={format}
+        data-ad-layout={layout || undefined}
+        data-full-width-responsive="true"
+      />
+
+      <script is:inline>
+        (function () {
+          var s = document.currentScript;
+          var ins = s && s.parentElement && s.parentElement.querySelector("ins.adsbygoogle");
+          // Jangan push unit yang tersembunyi (mis. iklan samping di mobile),
+          // karena AdSense akan melempar error "availableWidth=0".
+          if (!ins || ins.offsetWidth === 0) return;
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (e) {
+            console.error("AdSense error:", e);
+          }
+        })();
+      </script>
+    </aside>
+  )
+}

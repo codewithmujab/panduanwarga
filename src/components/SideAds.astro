@@ -1,0 +1,39 @@
+---
+import AdUnit from "./AdUnit.astro";
+import { ADSENSE_SLOTS } from "../consts";
+
+const hasSlot = /^\d+$/.test(ADSENSE_SLOTS.sidebarRight);
+---
+
+{
+  hasSlot && (
+    <div class="side-ad side-ad-right">
+      <AdUnit
+        slotId={ADSENSE_SLOTS.sidebarRight}
+        format="vertical"
+        minHeight="600px"
+      />
+    </div>
+  )
+}
+
+<style>
+  .side-ad {
+    display: none;
+  }
+
+  /* Hanya aktif di layar desktop yang ruang kanannya benar-benar cukup lebar */
+  @media (min-width: 1280px) {
+    .side-ad {
+      display: block;
+      position: fixed;
+      top: 80px;
+      width: 160px;
+      max-height: 620px;
+      z-index: 10;
+    }
+    .side-ad-right {
+      right: max(16px, calc((100vw - 720px) / 2 - 190px));
+    }
+  }
+</style>

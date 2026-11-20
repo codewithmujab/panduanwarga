@@ -1,0 +1,63 @@
+backend:
+  name: github
+  repo: codewithmujab/panduanwarga
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Artikel Panduan"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Judul Panduan", name: "title", widget: "string" }
+      - {
+          label: "Deskripsi Singkat (SEO)",
+          name: "description",
+          widget: "text",
+        }
+      - {
+          label: "Penulis",
+          name: "author",
+          widget: "string",
+          default: "Tim Redaksi PanduanWarga",
+        }
+      - {
+          label: "Tanggal Terbit",
+          name: "pubDate",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          format: "YYYY-MM-DD",
+        }
+      - {
+          label: "Nama Instansi / Sumber Data",
+          name: "source",
+          widget: "string",
+          required: false,
+          hint: "Contoh: Kementerian Sosial RI / BPJS Kesehatan",
+        }
+      - {
+          label: "Tanggal Diperbarui",
+          name: "updatedDate",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          format: "YYYY-MM-DD",
+          required: false,
+        }
+      - {
+          label: "URL Sumber Resmi",
+          name: "sourceUrl",
+          widget: "string",
+          required: false,
+          hint: "Contoh: https://cekbansos.kemensos.go.id",
+          pattern:
+            ["^https?://[^\\s]+$", "Harus diawali http:// atau https://"],
+        }
+      - { label: "Isi Artikel", name: "body", widget: "markdown" }

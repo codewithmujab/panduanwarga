@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="same-origin" />
+    <title>Admin Panel - PanduanWarga</title>
+  </head>
+  <body>
+    <!--
+      Versi dikunci + Subresource Integrity (SRI): jika file di CDN diubah pihak lain,
+      browser akan MENOLAK menjalankannya (melindungi token GitHub admin).
+      Saat ingin upgrade: ganti versi, lalu hitung ulang hash dengan:
+        curl -sL https://unpkg.com/@sveltia/cms@VERSI/dist/sveltia-cms.js | openssl dgst -sha384 -binary | openssl base64 -A
+    -->
+    <script
+      src="https://unpkg.com/@sveltia/cms@0.270.0/dist/sveltia-cms.js"
+      integrity="sha384-1PWMVQLxD8dGUGyxhuAzW9bW9EK+8qa/c6ntzhkqwb1x/1R58I64fX/zuQy+SgZF"
+      crossorigin="anonymous"
+      type="module"
+    ></script>
+  </body>
+</html>

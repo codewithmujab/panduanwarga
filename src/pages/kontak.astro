@@ -1,0 +1,38 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { CONTACT_EMAIL } from "../consts";
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead
+      title="Kontak - PanduanWarga"
+      description="Hubungi redaksi PanduanWarga untuk pertanyaan atau koreksi informasi."
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <h1>Hubungi Kami</h1>
+      <p>
+        Apabila Anda memiliki pertanyaan, masukan, atau menemukan perubahan
+        informasi regulasi yang perlu kami perbarui pada artikel di
+        PanduanWarga, silakan hubungi tim redaksi melalui alamat surel berikut:
+      </p>
+      <ul>
+        <li>
+          <strong>Email Redaksi:</strong>{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        </li>
+        <li>
+          <strong>Jam Operasional:</strong> Senin – Jumat, pukul 09.00 – 17.00
+          WIB
+        </li>
+      </ul>
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -14,6 +14,17 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			author: z.string().default('Tim Redaksi PanduanWarga'),
+			source: z.string().optional(),
+			// Hanya izinkan http/https. `z.string().url()` saja masih menerima
+			// `javascript:` dan `data:` yang bisa dipakai untuk XSS.
+			sourceUrl: z
+				.string()
+				.url()
+				.refine((u) => /^https?:\/\//i.test(u), {
+					message: 'sourceUrl harus diawali http:// atau https://',
+				})
+				.optional(),
 		}),
 });
 

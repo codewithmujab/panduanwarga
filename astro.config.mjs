@@ -6,8 +6,15 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
-	integrations: [mdx(), sitemap()],
+	site: 'https://panduanwarga.pages.dev',
+	integrations: [
+		mdx(),
+		sitemap({
+			// Halaman paginasi beranda (/2/, /3/, ...) isinya duplikat dengan /blog/,
+			// jadi tidak dimasukkan ke sitemap (halaman tsb juga diberi noindex).
+			filter: (page) => !/^https?:\/\/[^/]+\/\d+\/?$/.test(page),
+		}),
+	],
 	fonts: [
 		{
 			provider: fontProviders.local(),

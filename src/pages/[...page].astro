@@ -1,0 +1,147 @@
+---
+import type { GetStaticPathsOptions } from "astro";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../components/FormattedDate.astro";
+import SideAds from "../components/SideAds.astro";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+
+  // Atur jumlah artikel per halaman (misalnya 5 artikel per halaman)
+  return paginate(allPosts, { pageSize: 5 });
+}
+
+const { page } = Astro.props;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead
+      title={
+        page.currentPage === 1
+          ? SITE_TITLE
+          : `${SITE_TITLE} - Halaman ${page.currentPage}`
+      }
+      description={SITE_DESCRIPTION}
+      noindex={page.currentPage > 1}
+    />
+    <style>
+      .post-link {
+        text-decoration: none;
+        display: inline-block;
+      }
+      .post-link h3 {
+        margin: 0 0 0.25rem 0;
+        color: #1d4ed8;
+        transition: color 0.15s ease;
+      }
+      .post-link:hover h3 {
+        color: #1e40af;
+        text-decoration: underline;
+      }
+      .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        gap: 1rem;
+      }
+      .page-btn {
+        display: inline-block;
+        padding: 0.6rem 1.1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #1f2937;
+        font-weight: 600;
+        font-size: 0.9em;
+        transition: all 0.15s ease;
+      }
+      .page-btn:hover {
+        border-color: #1d4ed8;
+        color: #1d4ed8;
+        background-color: #eff6ff;
+      }
+      .page-btn.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .page-info {
+        color: #6b7280;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <SideAds />
+    <main>
+      {page.currentPage === 1 && (
+        <>
+          <h1>Panduan Praktis Layanan Publik & Administrasi</h1>
+          <p>
+            Temukan langkah-langkah jelas mengurus dokumen kependudukan
+            (Dukcapil), cek status bantuan sosial, layanan BPJS Kesehatan &
+            Ketenagakerjaan, hingga perpanjangan SIM/STNK secara mandiri.
+          </p>
+          <hr style="margin: 2rem 0; border: 0; border-top: 1px solid #eee;" />
+        </>
+      )}
+
+      <h2>
+        {page.currentPage === 1
+          ? "Panduan Terbaru"
+          : `Panduan Layanan Publik (Halaman ${page.currentPage})`}
+      </h2>
+
+      <ul style="list-style: none; padding: 0;">
+        {page.data.map((post) => (
+          <li style="margin-bottom: 1.75rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f3f4f6;">
+            <a href={`/blog/${post.id}/`} class="post-link">
+              <h3>{post.data.title}</h3>
+            </a>
+            <br />
+            <small style="color: #666;">
+              <FormattedDate date={post.data.pubDate} />
+            </small>
+            <p style="margin: 0.4rem 0 0 0;">{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+
+      {page.lastPage > 1 && (
+        <nav class="pagination" aria-label="Navigasi Halaman">
+          {page.url.prev ? (
+            <a href={page.url.prev} class="page-btn">
+              &larr; Sebelumnya
+            </a>
+          ) : (
+            <span class="page-btn disabled">&larr; Sebelumnya</span>
+          )}
+
+          <span class="page-info">
+            Halaman {page.currentPage} dari {page.lastPage}
+          </span>
+
+          {page.url.next ? (
+            <a href={page.url.next} class="page-btn">
+              Selanjutnya &rarr;
+            </a>
+          ) : (
+            <span class="page-btn disabled">Selanjutnya &rarr;</span>
+          )}
+        </nav>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,480 @@
+---
+import type { GetStaticPathsOptions } from "astro";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../../components/FormattedDate.astro";
+import { Image } from "astro:assets";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+
+  return paginate(allPosts, { pageSize: 6 });
+}
+
+const { page } = Astro.props;
+
+// Kumpulkan daftar unik Bulan-Tahun untuk dropdown arsip
+const allPostsForArchive = await getCollection("blog");
+const archiveMap = new Map<string, { label: string; count: number }>();
+
+const monthNames = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
+allPostsForArchive
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .forEach((post) => {
+    const d = new Date(post.data.pubDate);
+    // Pakai UTC agar sama dengan search-index.json (tidak bergeser karena zona waktu build).
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+    const label = `${monthNames[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+    const existing = archiveMap.get(key);
+    archiveMap.set(key, { label, count: (existing?.count || 0) + 1 });
+  });
+
+const archiveOptions = Array.from(archiveMap.entries());
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <BaseHead
+      title={
+        page.currentPage === 1
+          ? `Panduan - ${SITE_TITLE}`
+          : `Panduan (Halaman ${page.currentPage}) - ${SITE_TITLE}`
+      }
+      description={SITE_DESCRIPTION}
+    />
+    <style>
+      main {
+        width: 960px;
+      }
+      .filter-bar {
+        display: grid;
+        grid-template-columns: 2fr 1.2fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 2.5rem;
+        padding: 1rem;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+      }
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .filter-group label {
+        font-size: 0.8em;
+        font-weight: 600;
+        color: #4b5563;
+      }
+      .filter-input {
+        padding: 0.55rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 0.9em;
+        font-family: inherit;
+        background-color: #ffffff;
+      }
+      .filter-input:focus {
+        outline: none;
+        border-color: rgb(var(--accent));
+      }
+      .reset-btn {
+        margin-bottom: 1.25rem;
+        background: none;
+        border: none;
+        color: rgb(var(--accent));
+        font-size: 0.85em;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
+        display: none;
+      }
+      .reset-btn:hover {
+        text-decoration: underline;
+      }
+      .status-banner {
+        margin-bottom: 1rem;
+        font-size: 0.9em;
+        color: #4b5563;
+        display: none;
+      }
+
+      /* CSS Asli Template blog/index.astro */
+      ul.blog-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      ul.blog-list li {
+        width: calc(50% - 1rem);
+      }
+      ul.blog-list li * {
+        text-decoration: none;
+        transition: 0.2s ease;
+      }
+      ul.blog-list li:first-child {
+        width: 100%;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+      ul.blog-list li:first-child img {
+        width: 100%;
+      }
+      ul.blog-list li:first-child .title {
+        font-size: 2.369rem;
+      }
+      ul.blog-list li img {
+        margin-bottom: 0.5rem;
+        border-radius: 12px;
+      }
+      ul.blog-list li a {
+        display: block;
+      }
+      .title {
+        margin: 0;
+        color: rgb(var(--black));
+        line-height: 1;
+      }
+      .date {
+        margin: 0;
+        color: rgb(var(--gray));
+      }
+      ul.blog-list li a:hover h4,
+      ul.blog-list li a:hover .date {
+        color: rgb(var(--accent));
+      }
+      ul.blog-list li a:hover img {
+        box-shadow: var(--box-shadow);
+      }
+
+      /* Paginasi */
+      .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        gap: 1rem;
+      }
+      .page-btn {
+        display: inline-block;
+        padding: 0.6rem 1.1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #1f2937;
+        font-weight: 600;
+        font-size: 0.9em;
+        transition: all 0.15s ease;
+      }
+      .page-btn:hover {
+        border-color: rgb(var(--accent));
+        color: rgb(var(--accent));
+        background-color: #eff6ff;
+      }
+      .page-btn.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .page-info {
+        color: #6b7280;
+        font-size: 0.9em;
+      }
+
+      @media (max-width: 720px) {
+        main {
+          width: 100%;
+        }
+        .filter-bar {
+          grid-template-columns: 1fr;
+        }
+        ul.blog-list {
+          gap: 0.5em;
+        }
+        ul.blog-list li {
+          width: 100%;
+          text-align: center;
+        }
+        ul.blog-list li:first-child {
+          margin-bottom: 0;
+        }
+        ul.blog-list li:first-child .title {
+          font-size: 1.563em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <!-- Bar Pencarian & Filter Arsip -->
+      <section class="filter-bar" aria-label="Pencarian dan Arsip">
+        <div class="filter-group">
+          <label for="searchInput">Cari Panduan</label>
+          <input
+            type="search"
+            id="searchInput"
+            class="filter-input"
+            placeholder="Ketik kata kunci (misal: SIM, BPJS, Bansos)..."
+          />
+        </div>
+
+        <div class="filter-group">
+          <label for="monthFilter">Arsip Per Bulan</label>
+          <select id="monthFilter" class="filter-input">
+            <option value="">Semua Bulan</option>
+            {archiveOptions.map(([key, info]) => (
+              <option value={key}>
+                {info.label} ({info.count})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="dateFilter">Filter Per Tanggal</label>
+          <input type="date" id="dateFilter" class="filter-input" />
+        </div>
+      </section>
+
+      <div id="filterStatus" class="status-banner"></div>
+      <button id="resetFilterBtn" class="reset-btn" type="button">
+        &times; Reset pencarian & filter
+      </button>
+
+      <!-- Daftar Artikel Asli Bawaan blog/index.astro -->
+      <section>
+        <ul id="staticPostList" class="blog-list">
+          {page.data.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}/`}>
+                {post.data.heroImage && (
+                  <Image
+                    width={720}
+                    height={360}
+                    src={post.data.heroImage}
+                    alt={post.data.title}
+                  />
+                )}
+                <h4 class="title">{post.data.title}</h4>
+                <p class="date">
+                  <FormattedDate date={post.data.pubDate} />
+                </p>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <!-- Daftar Hasil Pencarian / Filter Dinamis -->
+        <ul
+          id="dynamicResultList"
+          class="blog-list"
+          style="display: none;"
+        ></ul>
+      </section>
+
+      <!-- Paginasi -->
+      {page.lastPage > 1 && (
+        <nav
+          id="paginationNav"
+          class="pagination"
+          aria-label="Navigasi Halaman Blog"
+        >
+          {page.url.prev ? (
+            <a href={page.url.prev} class="page-btn">
+              &larr; Sebelumnya
+            </a>
+          ) : (
+            <span class="page-btn disabled">&larr; Sebelumnya</span>
+          )}
+
+          <span class="page-info">
+            Halaman {page.currentPage} dari {page.lastPage}
+          </span>
+
+          {page.url.next ? (
+            <a href={page.url.next} class="page-btn">
+              Selanjutnya &rarr;
+            </a>
+          ) : (
+            <span class="page-btn disabled">Selanjutnya &rarr;</span>
+          )}
+        </nav>
+      )}
+    </main>
+    <Footer />
+
+    <script is:inline>
+      let indexPromise = null;
+      let requestId = 0;
+
+      const searchInput = document.getElementById("searchInput");
+      const monthFilter = document.getElementById("monthFilter");
+      const dateFilter = document.getElementById("dateFilter");
+      const resetBtn = document.getElementById("resetFilterBtn");
+      const statusBanner = document.getElementById("filterStatus");
+      const staticList = document.getElementById("staticPostList");
+      const dynamicList = document.getElementById("dynamicResultList");
+      const paginationNav = document.getElementById("paginationNav");
+
+      // Atribut scope CSS Astro (data-astro-cid-xxx) supaya elemen hasil
+      // pencarian mendapat style yang sama dengan daftar statis.
+      const scopeAttr = Array.from(dynamicList.attributes).find((a) =>
+        a.name.startsWith("data-astro-cid-"),
+      )?.name;
+
+      function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (scopeAttr) node.setAttribute(scopeAttr, "");
+        if (className) node.className = className;
+        // textContent = aman dari XSS (tidak pernah diparse sebagai HTML)
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
+      function loadIndex() {
+        if (!indexPromise) {
+          indexPromise = fetch("/search-index.json")
+            .then((res) => {
+              if (!res.ok) throw new Error("HTTP " + res.status);
+              return res.json();
+            })
+            .catch((err) => {
+              indexPromise = null; // izinkan coba lagi
+              throw err;
+            });
+        }
+        return indexPromise;
+      }
+
+      function formatIndoDate(dateStr) {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          timeZone: "UTC",
+        });
+      }
+
+      function showMessage(text) {
+        const li = el("li", "", text);
+        li.style.cssText =
+          "width: 100%; padding: 1.5rem 0; color: #6b7280; text-align: center;";
+        dynamicList.replaceChildren(li);
+      }
+
+      async function applyFilters() {
+        const current = ++requestId;
+        const query = searchInput.value.trim().toLowerCase();
+        const selectedMonth = monthFilter.value;
+        const selectedDate = dateFilter.value;
+
+        const isFiltering =
+          query !== "" || selectedMonth !== "" || selectedDate !== "";
+
+        if (!isFiltering) {
+          staticList.style.display = "flex";
+          dynamicList.style.display = "none";
+          statusBanner.style.display = "none";
+          resetBtn.style.display = "none";
+          if (paginationNav) paginationNav.style.display = "flex";
+          return;
+        }
+
+        staticList.style.display = "none";
+        if (paginationNav) paginationNav.style.display = "none";
+        dynamicList.style.display = "flex";
+        statusBanner.style.display = "block";
+        resetBtn.style.display = "inline-block";
+
+        let data;
+        try {
+          data = await loadIndex();
+        } catch (err) {
+          if (current !== requestId) return;
+          console.error("Gagal memuat indeks pencarian:", err);
+          statusBanner.textContent =
+            "Gagal memuat data pencarian. Periksa koneksi internet lalu coba lagi.";
+          dynamicList.replaceChildren();
+          return;
+        }
+        // Abaikan hasil lama jika pengguna sudah mengetik lagi.
+        if (current !== requestId) return;
+
+        const filtered = data.filter((item) => {
+          const matchQuery =
+            !query ||
+            String(item.title).toLowerCase().includes(query) ||
+            String(item.description).toLowerCase().includes(query);
+          const matchMonth = !selectedMonth || item.yearMonth === selectedMonth;
+          const matchDate = !selectedDate || item.fullDate === selectedDate;
+          return matchQuery && matchMonth && matchDate;
+        });
+
+        statusBanner.textContent = `Menampilkan ${filtered.length} panduan yang sesuai.`;
+
+        if (filtered.length === 0) {
+          showMessage(
+            "Tidak ada panduan yang cocok dengan pencarian atau tanggal tersebut.",
+          );
+          return;
+        }
+
+        const frag = document.createDocumentFragment();
+        for (const post of filtered) {
+          const li = el("li");
+          const a = el("a");
+          a.href = "/blog/" + encodeURI(String(post.id)) + "/";
+          a.append(
+            el("h4", "title", String(post.title)),
+            el("p", "date", formatIndoDate(post.pubDate)),
+          );
+          li.append(a);
+          frag.append(li);
+        }
+        dynamicList.replaceChildren(frag);
+      }
+
+      searchInput.addEventListener("input", applyFilters);
+      monthFilter.addEventListener("change", () => {
+        if (monthFilter.value) dateFilter.value = "";
+        applyFilters();
+      });
+      dateFilter.addEventListener("change", () => {
+        if (dateFilter.value) monthFilter.value = "";
+        applyFilters();
+      });
+      resetBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        monthFilter.value = "";
+        dateFilter.value = "";
+        applyFilters();
+      });
+    </script>
+  </body>
+</html>

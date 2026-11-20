@@ -3,6 +3,8 @@ backend:
   repo: codewithmujab/panduanwarga
   branch: main
 
+site_url: "https://panduanwarga.com"
+
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 

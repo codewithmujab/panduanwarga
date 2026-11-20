@@ -14,4 +14,4 @@ export const ADSENSE_SLOTS = {
 	sidebarRight: '',
 };
 
-export const CONTACT_EMAIL = 'redaksi@panduanwarga.id';
+export const CONTACT_EMAIL = 'redaksi@panduanwarga.com';

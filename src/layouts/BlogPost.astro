@@ -37,12 +37,14 @@ const safeSourceUrl =
     />
     <style>
       main {
-        width: calc(100% - 2em);
-        max-width: 100%;
-        margin: 0;
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+        padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 4vw, 1.5rem);
       }
       .hero-image {
         width: 100%;
+        margin-bottom: 1.25rem;
       }
       .hero-image img {
         display: block;
@@ -51,30 +53,27 @@ const safeSourceUrl =
         box-shadow: var(--box-shadow);
       }
       .prose {
-        width: 720px;
-        max-width: calc(100% - 2em);
-        margin: auto;
-        padding: 1em;
+        width: 100%;
+        margin: 0 auto;
         color: rgb(var(--gray-dark));
       }
       .title {
-        margin-bottom: 1em;
-        padding: 1em 0;
-        text-align: center;
-        line-height: 1;
+        margin-bottom: 1.25rem;
+        padding: 0.25rem 0 0.5rem 0;
+        text-align: left;
       }
       .title h1 {
-        margin: 0 0 0.5em 0;
+        margin: 0 0 0.75rem 0;
+        line-height: 1.25;
       }
       .meta-info {
         display: flex;
-        justify-content: center;
         align-items: center;
         flex-wrap: wrap;
-        gap: 0.6rem;
-        margin-bottom: 0.75em;
+        gap: 0.35rem 0.55rem;
+        margin-bottom: 0.65rem;
         color: rgb(var(--gray));
-        font-size: 0.9em;
+        font-size: 0.88em;
       }
       .author-badge {
         font-weight: 600;
@@ -82,11 +81,11 @@ const safeSourceUrl =
       }
       .last-updated-on {
         font-style: italic;
-        font-size: 0.85em;
+        font-size: 0.9em;
       }
       .source-box {
-        margin-top: 2.5rem;
-        padding: 1.25rem 1.5rem;
+        margin-top: 2.25rem;
+        padding: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
         background-color: #f8fafc;
         border-left: 4px solid #1d4ed8;
         border-radius: 0 8px 8px 0;
@@ -100,7 +99,7 @@ const safeSourceUrl =
       .source-box p {
         margin: 0;
         color: #475569;
-        line-height: 1.5;
+        line-height: 1.55;
       }
       .source-box a {
         color: #1d4ed8;
@@ -114,22 +113,31 @@ const safeSourceUrl =
     <SideAds />
     <main>
       <article>
-        <div class="hero-image">
-          {heroImage && (
-            <img width={1020} height={510} src={heroImage.src} alt={title} />
-          )}
-        </div>
+        {
+          heroImage && (
+            <div class="hero-image">
+              <img
+                width={1020}
+                height={510}
+                src={heroImage.src}
+                alt={title}
+              />
+            </div>
+          )
+        }
         <div class="prose">
           <div class="title">
             <div class="meta-info">
               <span class="author-badge">Oleh: {author}</span>
               <span>&bull;</span>
               <FormattedDate date={pubDate} />
-              {updatedDate && (
-                <span class="last-updated-on">
-                  (Diperbarui: <FormattedDate date={updatedDate} />)
-                </span>
-              )}
+              {
+                updatedDate && (
+                  <span class="last-updated-on">
+                    (Diperbarui: <FormattedDate date={updatedDate} />)
+                  </span>
+                )
+              }
             </div>
             <h1>{title}</h1>
             <hr />
@@ -145,35 +153,37 @@ const safeSourceUrl =
           <aside class="source-box" aria-label="Sumber Informasi">
             <strong>Sumber Informasi & Referensi Resmi</strong>
             <p>
-              {source ? (
-                <>
-                  Disusun berdasarkan rujukan resmi dari{" "}
-                  <strong>{source}</strong>
-                  {safeSourceUrl && (
-                    <>
-                      {" "}
-                      (
-                      <a
-                        href={safeSourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                      >
-                        {safeSourceUrl}
-                      </a>
-                      )
-                    </>
-                  )}
-                  . Kebijakan dan tarif layanan dapat berubah sewaktu-waktu
-                  sesuai ketentuan instansi terkait.
-                </>
-              ) : (
-                <>
-                  Informasi pada panduan ini dirangkum dari kanal resmi
-                  kementerian/lembaga terkait di Indonesia. Selalu periksa
-                  portal resmi instansi bersangkutan untuk pembaruan regulasi
-                  terbaru.
-                </>
-              )}
+              {
+                source ? (
+                  <>
+                    Disusun berdasarkan rujukan resmi dari{" "}
+                    <strong>{source}</strong>
+                    {safeSourceUrl && (
+                      <>
+                        {" "}
+                        (
+                        <a
+                          href={safeSourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                        >
+                          {safeSourceUrl}
+                        </a>
+                        )
+                      </>
+                    )}
+                    . Kebijakan dan tarif layanan dapat berubah sewaktu-waktu
+                    sesuai ketentuan instansi terkait.
+                  </>
+                ) : (
+                  <>
+                    Informasi pada panduan ini dirangkum dari kanal resmi
+                    kementerian/lembaga terkait di Indonesia. Selalu periksa
+                    portal resmi instansi bersangkutan untuk pembaruan regulasi
+                    terbaru.
+                  </>
+                )
+              }
             </p>
           </aside>
         </div>

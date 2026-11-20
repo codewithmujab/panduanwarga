@@ -38,13 +38,12 @@ const safeSourceUrl =
     <style>
       main {
         width: 100%;
-        max-width: 760px;
-        margin: 0 auto;
-        padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1rem, 4vw, 1.5rem);
+        max-width: 100%;
+        margin: 0;
+        padding: 1em 0;
       }
       .hero-image {
         width: 100%;
-        margin-bottom: 1.25rem;
       }
       .hero-image img {
         display: block;
@@ -53,27 +52,30 @@ const safeSourceUrl =
         box-shadow: var(--box-shadow);
       }
       .prose {
-        width: 100%;
-        margin: 0 auto;
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 1em;
         color: rgb(var(--gray-dark));
       }
       .title {
-        margin-bottom: 1.25rem;
-        padding: 0.25rem 0 0.5rem 0;
-        text-align: left;
+        margin-bottom: 1em;
+        padding: 1em 0;
+        text-align: center;
+        line-height: 1;
       }
       .title h1 {
-        margin: 0 0 0.75rem 0;
-        line-height: 1.25;
+        margin: 0 0 0.5em 0;
       }
       .meta-info {
         display: flex;
+        justify-content: center;
         align-items: center;
         flex-wrap: wrap;
-        gap: 0.35rem 0.55rem;
-        margin-bottom: 0.65rem;
+        gap: 0.6rem;
+        margin-bottom: 0.75em;
         color: rgb(var(--gray));
-        font-size: 0.88em;
+        font-size: 0.9em;
       }
       .author-badge {
         font-weight: 600;
@@ -81,11 +83,11 @@ const safeSourceUrl =
       }
       .last-updated-on {
         font-style: italic;
-        font-size: 0.9em;
+        font-size: 0.85em;
       }
       .source-box {
-        margin-top: 2.25rem;
-        padding: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
+        margin-top: 2.5rem;
+        padding: 1.25rem 1.5rem;
         background-color: #f8fafc;
         border-left: 4px solid #1d4ed8;
         border-radius: 0 8px 8px 0;
@@ -99,11 +101,18 @@ const safeSourceUrl =
       .source-box p {
         margin: 0;
         color: #475569;
-        line-height: 1.55;
+        line-height: 1.5;
       }
       .source-box a {
         color: #1d4ed8;
         word-break: break-all;
+      }
+      @media (max-width: 720px) {
+        .prose {
+          width: 100%;
+          max-width: 100%;
+          padding: 0.5em 1em;
+        }
       }
     </style>
   </head>
@@ -113,18 +122,18 @@ const safeSourceUrl =
     <SideAds />
     <main>
       <article>
-        {
-          heroImage && (
-            <div class="hero-image">
+        <div class="hero-image">
+          {
+            heroImage && (
               <img
                 width={1020}
                 height={510}
                 src={heroImage.src}
                 alt={title}
               />
-            </div>
-          )
-        }
+            )
+          }
+        </div>
         <div class="prose">
           <div class="title">
             <div class="meta-info">

@@ -33,83 +33,38 @@ const { page } = Astro.props;
       noindex={page.currentPage > 1}
     />
     <style>
-      .hero-intro {
-        margin-bottom: 1.75rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
-      }
-      .hero-intro p {
-        margin-bottom: 0;
-        color: #4b5563;
-      }
-      .section-heading {
-        margin-top: 0;
-        margin-bottom: 1.25rem;
-      }
-      .post-feed {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
-      }
-      .post-item {
-        padding: clamp(1rem, 2.5vw, 1.35rem);
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-      }
-      .post-item:hover {
-        border-color: #bfdbfe;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
-      }
       .post-link {
         text-decoration: none;
-        display: block;
+        display: inline-block;
       }
       .post-link h3 {
-        margin: 0 0 0.35rem 0;
+        margin: 0 0 0.25rem 0;
         color: #1d4ed8;
         transition: color 0.15s ease;
-        line-height: 1.35;
       }
       .post-link:hover h3 {
         color: #1e40af;
         text-decoration: underline;
-      }
-      .post-meta {
-        display: block;
-        color: #6b7280;
-        font-size: 0.85em;
-        margin-bottom: 0.45rem;
-      }
-      .post-desc {
-        margin: 0;
-        color: #374151;
-        font-size: 0.95em;
-        line-height: 1.6;
       }
       .pagination {
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        margin-top: 2.25rem;
+        margin-top: 2.5rem;
         padding-top: 1.5rem;
         border-top: 1px solid #e5e7eb;
         gap: 0.75rem;
       }
       .page-btn {
         display: inline-block;
-        padding: 0.55rem 1rem;
+        padding: 0.6rem 1.1rem;
         border: 1px solid #d1d5db;
         border-radius: 8px;
         text-decoration: none;
         color: #1f2937;
         font-weight: 600;
-        font-size: 0.88em;
+        font-size: 0.9em;
         transition: all 0.15s ease;
       }
       .page-btn:hover {
@@ -123,8 +78,7 @@ const { page } = Astro.props;
       }
       .page-info {
         color: #6b7280;
-        font-size: 0.88em;
-        text-align: center;
+        font-size: 0.9em;
       }
     </style>
   </head>
@@ -134,18 +88,19 @@ const { page } = Astro.props;
     <main>
       {
         page.currentPage === 1 && (
-          <section class="hero-intro">
+          <>
             <h1>Panduan Praktis Layanan Publik & Administrasi</h1>
             <p>
               Temukan langkah-langkah jelas mengurus dokumen kependudukan
               (Dukcapil), cek status bantuan sosial, layanan BPJS Kesehatan &
               Ketenagakerjaan, hingga perpanjangan SIM/STNK secara mandiri.
             </p>
-          </section>
+            <hr style="margin: 2rem 0; border: 0; border-top: 1px solid #eee;" />
+          </>
         )
       }
 
-      <h2 class="section-heading">
+      <h2>
         {
           page.currentPage === 1
             ? "Panduan Terbaru"
@@ -153,17 +108,18 @@ const { page } = Astro.props;
         }
       </h2>
 
-      <ul class="post-feed">
+      <ul style="list-style: none; padding: 0;">
         {
           page.data.map((post) => (
-            <li class="post-item">
+            <li style="margin-bottom: 1.75rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f3f4f6;">
               <a href={`/blog/${post.id}/`} class="post-link">
                 <h3>{post.data.title}</h3>
               </a>
-              <small class="post-meta">
+              <br />
+              <small style="color: #666;">
                 <FormattedDate date={post.data.pubDate} />
               </small>
-              <p class="post-desc">{post.data.description}</p>
+              <p style="margin: 0.4rem 0 0 0;">{post.data.description}</p>
             </li>
           ))
         }

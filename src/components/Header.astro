@@ -1,22 +1,12 @@
 ---
+import { SITE_TITLE } from "../consts";
 import HeaderLink from "./HeaderLink.astro";
 ---
 
 <header>
   <nav>
     <h2>
-      <a href="/" class="brand-logo" aria-label="PanduanWarga - Beranda">
-        <img
-          src="/favicon.svg?v=2"
-          alt=""
-          width="32"
-          height="32"
-          class="brand-icon"
-        />
-        <span class="brand-text">
-          Panduan<span class="brand-accent">Warga</span>
-        </span>
-      </a>
+      <a href="/">{SITE_TITLE}</a>
     </h2>
     <div class="internal-links">
       <HeaderLink href="/">Beranda</HeaderLink>
@@ -28,75 +18,41 @@ import HeaderLink from "./HeaderLink.astro";
 <style>
   header {
     margin: 0;
-    padding: 0 clamp(0.75rem, 3vw, 1.5rem);
+    padding: 0 1em;
     background: white;
     box-shadow: 0 2px 8px rgba(var(--black), 5%);
-    position: sticky;
-    top: 0;
-    z-index: 20;
+  }
+  h2 {
+    margin: 0;
+    font-size: 1em;
+  }
+
+  h2 a,
+  h2 a.active {
+    text-decoration: none;
   }
   nav {
-    max-width: 1024px;
-    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 0.25rem 0.75rem;
   }
-  h2 {
-    margin: 0;
-    font-size: clamp(1.02rem, 0.95rem + 0.35vw, 1.2rem);
-  }
-  .brand-logo,
-  .brand-logo.active {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.65em 0.15em;
+  nav a {
+    padding: 1em 0.5em;
+    color: var(--black);
+    border-bottom: 4px solid transparent;
     text-decoration: none;
-    border-bottom: none;
   }
-  .brand-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 7px;
-    flex-shrink: 0;
-  }
-  .brand-text {
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #0f172a;
-  }
-  .brand-accent {
-    color: #1d4ed8;
-  }
-  .internal-links {
-    display: flex;
-    align-items: center;
-    gap: 0.15rem;
-  }
-  .internal-links a {
-    padding: 0.85em 0.55em;
-    color: rgb(var(--black));
-    border-bottom: 3px solid transparent;
-    text-decoration: none;
-    font-size: 0.95em;
-    white-space: nowrap;
-  }
-  .internal-links a.active {
+  nav a.active {
     text-decoration: none;
     border-bottom-color: var(--accent);
   }
-
   @media (max-width: 480px) {
-    .brand-icon {
-      width: 26px;
-      height: 26px;
+    header {
+      padding: 0 0.75em;
     }
-    .internal-links a {
-      padding: 0.75em 0.4em;
-      font-size: 0.88em;
+    nav a {
+      padding: 0.85em 0.4em;
     }
   }
 </style>
